@@ -1,44 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Telegram Mini App</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Heena Trade App</title>
 </head>
+<body>
+  <h2 id="welcome-text">Welcome 👋</h2>
 
-<body class="bg-gray-100 text-gray-900 p-4">
+  <!-- ✅ Telegram Login Button (for external website users) -->
+  <div id="login-widget">
+    <script async src="https://telegram.org/js/telegram-widget.js?22"
+      data-telegram-login="heenatradebot"
+      data-size="large"
+      data-onauth="onTelegramAuth(user)"
+      data-request-access="write">
+    </script>
+  </div>
 
-    <div class="max-w-md mx-auto bg-white p-6 rounded-xl shadow-md">
-        <h1 class="text-2xl font-bold mb-4 text-center">Welcome to My Telegram App</h1>
-        <p class="text-center text-gray-700">Start your trading journey</p>
-
-        <div class="mt-6 flex justify-center">
-            <button id="startBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Start Now
-            </button>
-        </div>
-    </div>
-
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script>
+  <!-- ✅ Mini App Script (for Telegram users inside Telegram Web App) -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
     const tg = window.Telegram.WebApp;
-    tg.expand(); // Make app fullscreen
 
-    // Example to show user data
-    console.log("Telegram User ID:", tg.initDataUnsafe?.user?.id);
-    console.log("Telegram User Name:", tg.initDataUnsafe?.user?.first_name);
+    if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+      tg.expand(); // Make app fullscreen
+      const name = tg.initDataUnsafe.user.first_name || "User";
+      document.getElementById("welcome-text").innerText = `Welcome ${name} 👋`;
 
-    // Optional: Display username on screen
-    document.addEventListener("DOMContentLoaded", function () {
-        const name = tg.initDataUnsafe?.user?.first_name || "User";
-        document.body.innerHTML = `<h2>Welcome ${name} 👋</h2>`;
-    });
-</script>
+      console.log("Telegram User ID:", tg.initDataUnsafe.user.id);
+      console.log("Telegram User Name:", name);
 
+      // Optionally hide login widget if user came from Telegram
+      document.getElementById("login-widget").style.display = "none";
+    }
+  </script>
+
+  <!-- ✅ Auth Callback Function for Login Widget -->
+  <script>
+    function onTelegramAuth(user) {
+      alert('Logged in as ' + user.first_name + ' ' + user.last_name + ' (' + user.id + ')');
+      document.getElementById("welcome-text").innerText = `Welcome ${user.first_name} 👋`;
+      console.log("Logged in via Login Widget:", user);
+    }
+  </script>
 </body>
-
 </html>
