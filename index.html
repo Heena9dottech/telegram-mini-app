@@ -1,26 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Heena Trade App</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Heena Trade App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-    <h2>Welcome to Heena Trade App 👋</h2>
-    <button onclick="openApp()">Open App</button>
+  <h2 id="welcome">Loading...</h2>
 
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
 
-        const user = tg.initDataUnsafe?.user;
-        if (user) {
-            document.querySelector("h2").innerText = `Welcome ${user.first_name} 👋`;
-        }
-
-        function openApp() {
-            window.location.href = "https://telegram-mini-app-heena.netlify.app/";
-        }
-    </script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const user = tg.initDataUnsafe?.user;
+      const name = user?.first_name || "User";
+      document.getElementById("welcome").innerHTML = `Welcome to Heena Trade App 👋<br>Hello, ${name}`;
+    });
+  </script>
 </body>
 </html>
