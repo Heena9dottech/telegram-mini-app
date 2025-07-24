@@ -1,67 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Heena Trade App</title>
-    <style>
-        html,
-        body {
-            height: 100%;
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background-color: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #000000);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        h2 {
-            margin-bottom: 20px;
-            font-size: 24px;
-            color: var(--tg-theme-text-color, #222);
-        }
-
-        button {
-            padding: 12px 24px;
-            background-color: var(--tg-theme-button-color, #0088cc);
-            color: var(--tg-theme-button-text-color, white);
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: 0.2s;
-        }
-
-        button:hover {
-            opacity: 0.9;
-        }
-    </style>
+  <title>Heena Telegram Mini App</title>
 </head>
-
 <body>
-    <h2 id="greeting">Welcome 👋</h2>
-    <button onclick="startTrading()">Start Trading</button>
+  <h2 id="welcome"></h2>
+  <p>This Mini App lets you access your trading dashboard directly in Telegram.</p>
+  <p><strong>Click below to receive a welcome message with a shortcut to the app!</strong></p>
 
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
+  <button onclick="sendTelegramMessage()">📲 Send Telegram Welcome</button>
 
-        const user = tg.initDataUnsafe?.user;
-        if (user) {
-            document.getElementById("greeting").textContent = `Welcome ${user.first_name} 👋`;
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    const user = tg.initDataUnsafe?.user;
+    const name = user?.first_name || 'User';
+    const userId = user?.id;
+
+    document.getElementById('welcome').innerText = `Welcome ${name} 👋`;
+
+    function sendTelegramMessage() {
+      if (!userId) {
+        alert("User ID not found. Please open this app from Telegram.");
+        return;
+      }
+
+      const botToken = '8128648073:AAFPXb7yx_qDGw-4YvxQ2ZP_VXdMAzXVZJA';
+      const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+      const payload = {
+        chat_id: userId,
+        text: `Hi ${name}! 👋\nWelcome to Heena Trade App.`,
+        reply_markup: {
+          inline_keyboard: [[
+            {
+              text: 'Open Mini App',
+              web_app: {
+                url: 'https://telegram-mini-app-heena.netlify.app'
+              }
+            }
+          ]]
         }
+      };
 
-        function startTrading() {
-            alert("Trading page coming soon!");
-            // You can later navigate to another page or open a URL
-        }
-    </script>
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        alert("✅ Message sent to your Telegram!");
+      })
+      .catch(err => {
+        console.error(err);
+        alert("❌ Failed to send message.");
+      });
+    }
+  </script>
 </body>
-
 </html>
