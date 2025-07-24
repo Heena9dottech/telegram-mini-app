@@ -23,20 +23,21 @@
         </div>
     </div>
 
-    <script>
-        const tg = window.Telegram.WebApp;
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+    const tg = window.Telegram.WebApp;
+    tg.expand(); // Make app fullscreen
 
-        // Expand the WebApp window when it loads
-        tg.expand();
+    // Example to show user data
+    console.log("Telegram User ID:", tg.initDataUnsafe?.user?.id);
+    console.log("Telegram User Name:", tg.initDataUnsafe?.user?.first_name);
 
-        // Optional: Set background color
-        tg.setBackgroundColor('#ffffff');
-
-        // Handle Start button click
-        document.getElementById('startBtn').addEventListener('click', function () {
-            tg.showAlert("Welcome to the trading platform!");
-        });
-    </script>
+    // Optional: Display username on screen
+    document.addEventListener("DOMContentLoaded", function () {
+        const name = tg.initDataUnsafe?.user?.first_name || "User";
+        document.body.innerHTML = `<h2>Welcome ${name} 👋</h2>`;
+    });
+</script>
 
 </body>
 
