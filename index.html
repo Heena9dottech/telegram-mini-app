@@ -1,59 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Heena Trade App</title>
-  <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: var(--tg-theme-bg-color, #ffffff);
-      color: var(--tg-theme-text-color, #000000);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    h2 {
-      margin-bottom: 20px;
-      font-size: 24px;
-      color: var(--tg-theme-text-color, #222);
-    }
-    button {
-      padding: 12px 24px;
-      background-color: var(--tg-theme-button-color, #0088cc);
-      color: var(--tg-theme-button-text-color, white);
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: 0.2s;
-    }
-    button:hover {
-      opacity: 0.9;
-    }
-  </style>
+  <title>Heena Telegram Mini App</title>
 </head>
 <body>
-  <h2 id="greeting">Welcome 👋</h2>
-  <button onclick="startTrading()">Start Trading</button>
+  <h1>Welcome Heena 👋</h1>
+  <button onclick="sendTelegramMessage()">Send to Telegram</button>
 
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
+    function sendTelegramMessage() {
+      const botToken = '8128648073:AAFPXb7yx_qDGw-4YvxQ2ZP_VXdMAzXVZJA';
+      const chatId = '877802451';
+      const message = 'Welcome to Heena Trade App! 👋';
+      const webAppUrl = 'https://telegram-mini-app-heena.netlify.app';
 
-    const user = tg.initDataUnsafe?.user;
-    if (user) {
-      document.getElementById("greeting").textContent = `Welcome ${user.first_name} 👋`;
-    }
+      const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
 
-    function startTrading() {
-      alert("Trading page coming soon!");
-      // You can later navigate to another page or open a URL
+      const payload = {
+        chat_id: chatId,
+        text: message,
+        reply_markup: {
+          inline_keyboard: [[
+            {
+              text: 'Open App',
+              web_app: { url: webAppUrl }
+            }
+          ]]
+        }
+      };
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Telegram API response:', data);
+        alert("Message sent successfully!");
+      })
+      .catch(error => {
+        console.error('Error sending Telegram message:', error);
+        alert("Error sending message.");
+      });
     }
   </script>
 </body>
